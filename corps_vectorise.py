@@ -1,16 +1,19 @@
 import numpy as np
 
-def maj_v_a(position, vitesse, a, dt): #maj de la position et vitesse à partir de l'accélération et un pas de temps
-    position = position + dt*np.array(vitesse) + (dt**2)*a/2
-    vitesse = vitesse + dt*a
-    return position, vitesse
+def maj_pos_v(positions, vitesses, a, dt): 
+    """
+    mise à jour de la position et de la vitesse de
+    chaque corps de la galaxie 
+    
+    """
+    positions = positions + dt*vitesses + (dt**2)*a/2
+    vitesses = vitesses + dt*a
+    return positions, vitesses
 
-def force_attraction(masse, position):
+def acc(masses, positions):
     G = 1.560339*1e-13
-    masse = np.array(masse)
-    position = np.array(position)
-    diff = position[: , np.newaxis, :] - position[np.newaxis, :, :] #cube
-    f = -G * masse[np.newaxis,:, np.newaxis] * diff / (np.linalg.norm(diff, axis = -1)**3+1e-15)[:, :, np.newaxis]
-    f_i = np.sum( f, axis = 1)
+    diff = positions[: , np.newaxis, :] - positions[np.newaxis, :, :] #cube
+    a = -G * masses[np.newaxis,:, np.newaxis] * diff / (np.linalg.norm(diff, axis = -1)**3+1e-15)[:, :, np.newaxis]
+    a_i = np.sum(a, axis = 1)
 
-    return f_i
+    return a_i
