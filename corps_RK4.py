@@ -1,12 +1,15 @@
 import numpy as np
+import numba
 
+@numba.njit(parallel=True)
 def compute_acceleration(positions,masses):
     nb_corps = len(positions)
-    a = np.zeros((nb_corps,3), dtype = np.float64)
-    G = 1.560339*1e-13
-    for i in range(nb_corps):
+    a : np.ndarray = np.empty((nb_corps,3), dtype = np.float64)
+    G : numba.float64 = 1.560339*1e-13
+
+    for i in numba.prange(nb_corps):
         a_i = np.zeros(3, dtype = np.float64)
-        for j in range(nb_corps):
+        for j in numba.prange(nb_corps):
             if j != i:
                 diff_x = positions[j, 0] - positions[i, 0]
                 diff_y = positions[j, 1] - positions[i, 1]
