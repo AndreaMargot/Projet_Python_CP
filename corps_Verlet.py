@@ -14,7 +14,7 @@ def compute_acceleration(positions,masses):
                 diff_x = positions[j, 0] - positions[i, 0]
                 diff_y = positions[j, 1] - positions[i, 1]
                 diff_z =  positions[j, 2] - positions[i, 2]
-                norm = diff_x**2 + diff_y**2 + diff_z**2
+                norm = np.sqrt(diff_x**2 + diff_y**2 + diff_z**2)
                 a_i[0] += (masses[j]*diff_x)/(norm**3)
                 a_i[1] += (masses[j]*diff_y)/(norm**3)
                 a_i[2] += (masses[j]*diff_z)/(norm**3)

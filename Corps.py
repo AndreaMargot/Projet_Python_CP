@@ -41,7 +41,7 @@ class NCorps():
         G = 1.560339*1e-13
         a = []
         for self_corps in self.collect_corps: 
-            a_i = [0, 0, 0]
+            a_i = np.zeros(3)
             for self_corps2 in self.collect_corps:
                 diff = self_corps2.position - self_corps.position
                 norm_diff = np.linalg.norm(diff)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
                    max_orbital_radius=1.0,
                    output_file=None) #on génère n_stars étoiles
     
-    Ncorps = NCorps([Corps(masses[i], positions[i], velocities[i], colors[i]) for i in range(n_stars)]) #collection de corps à partir des données générées
+    Ncorps = NCorps([Corps(masses[i], positions[i], velocities[i], colors[i]) for i in range(n_stars + 1)]) #collection de corps à partir des données générées
     
     luminosities = np.random.uniform(0.3, 1.0, n_stars+1).astype(np.float32)
     bounds = ((-3, 3), (-3, 3), (-3, 3)) #définition des limites de l'espace 
