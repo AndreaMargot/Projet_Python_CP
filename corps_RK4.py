@@ -37,7 +37,6 @@ def update_pos_v(positions, vitesses, masses, dt):
     # Etape 2 
     a2 = compute_acceleration(p1 + 0.5*dt*v1,masses)
     v2 = v1 + 0.5*dt*a1
-    p2 = p1 + 0.5*dt*v1
 
     # Etape 3
     a3 = compute_acceleration(p1 + 0.5*dt*v2,masses)
