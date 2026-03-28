@@ -14,22 +14,19 @@ def acceleration(n_stars, positions, masses ):
     acc = np.zeros_like(positions)
     list_boxes = [b for rangee in boxes for b in rangee if len(b) > 0]
 
-    # centres de gravité et masses des boîtes
     all_cgrav, m_boxes = centres_gravite(boxes, positions, masses)
     seuil = np.sqrt(l**2 + L**2) / 10
 
     for i in range(n_stars):
         pos_i = positions[i]
         diff_boxes = all_cgrav - pos_i
-        dist = np.sqrt(np.sum(diff_boxes**2, axis=1)) #toutes les distances des boites avec l'étoile
+        dist = np.sqrt(np.sum(diff_boxes**2, axis=1)) 
 
-        # --------- cas lointain ------------
-        loin = dist >= seuil #si la distance entre l'étoile et le centre de gravité de la boîte est supérieure au seuil fixé
+        loin = dist >= seuil 
         inv_dist3 = 1 / (dist[loin]**3)
         acc[i] += G * np.sum(m_boxes[loin][:, np.newaxis] * diff_boxes[loin] * inv_dist3[:, np.newaxis], axis=0)
 
-        # --------- cas proche --------------
-        proche = np.where(~loin)[0] #indice des boîtes proches
+        proche = np.where(~loin)[0] 
         if proche.size > 0 :
 
             for ind_boite in proche:
@@ -64,7 +61,7 @@ def update(dt):
     global masses
 
     masses = np.array(masses, dtype=np.float64)
-    positions = np.array(positions, dtype=np.float64) # Doit être de forme (N, 3)
+    positions = np.array(positions, dtype=np.float64) 
     vitesses = np.array(vitesses, dtype=np.float64)
 
     t1 = time.time()
@@ -97,11 +94,9 @@ def centres_gravite(boxes, positions, masses):
         m_boite = masses[oboite]
         p_boite = positions[oboite]
 
-        # Calcul de la masse totale de la boîte
         m_somme = np.sum(m_boite)
         m_totales[i] = m_somme
 
-        # Calcul du centre de gravité : moyenne des positions pondérée par les masses
         if m_somme > 0:
             cgravs[i] = np.sum(p_boite * m_boite[:, np.newaxis], axis=0) / m_somme
 
@@ -110,28 +105,26 @@ def centres_gravite(boxes, positions, masses):
 
 def box(positions, n_stars):
 
-    #on définit les bords de notre grille
     x_min = min([positions[i][0] for i in range(n_stars)])
     x_max = max([positions[i][0] for i in range(n_stars)])
 
     y_min = min([positions[i][1] for i in range(n_stars)])
     y_max = max([positions[i][1] for i in range(n_stars)])
 
-    l = y_max - y_min #largeur de la boîte
-    L = x_max - x_min #longueur de la boîte
+    l = y_max - y_min 
+    L = x_max - x_min 
 
-    #on divise en 10 intervalles
-    interv_x = L/10 #longueur d'un intervalle en x
-    interv_y = l/10 #longueur d'un intervalle en y
+    interv_x = L/10 
+    interv_y = l/10 
 
-    C=[[[] for _ in range(10)] for _ in range(10)] #faire une matrice 10*10 de listes vides
+    C=[[[] for _ in range(10)] for _ in range(10)] 
     
-    for i in range(n_stars): #pour chaque étoile on détermine sa sous-boite
-        rest_x = int((positions[i][0]-x_min )// interv_x)  #indice de la position en x de l'étoile d'indice i
+    for i in range(n_stars):
+        rest_x = int((positions[i][0]-x_min )// interv_x)  
         rest_y = int((positions[i][1] - y_min) // interv_y)
         C[rest_y-1][rest_x-1].append(i)
 
-    return C, l/10, L/10  #C : liste de listes de listes
+    return C, l/10, L/10  
 
 luminosities = np.random.uniform(0.3, 1.0, n_stars+1).astype(np.float32)
 bounds = ((-3, 3), (-3, 3), (-3, 3))
